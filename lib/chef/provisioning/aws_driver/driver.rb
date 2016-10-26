@@ -1470,7 +1470,6 @@ EOD
         :matching => /Invalid IAM Instance Profile name/
       ) do |retries, exception|
         Chef::Log.debug("Instance creation InvalidParameterValue exception is #{exception.inspect}")
-        require 'pry'; binding.pry
         instance = ec2_resource.create_instances(bootstrap_options.to_hash)[0]
       end
 
