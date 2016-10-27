@@ -847,10 +847,12 @@ EOD
         Chef::Provisioning::Machine::UnixMachine.new(machine_spec, transport_for(machine_spec, machine_options, instance), convergence_strategy_for(machine_spec, machine_options))
       end
     end
-    def symbolize(obj)
-        return obj.inject({}){|memo,(k,v)| memo[k.to_sym] =  symbolize(v); memo} if obj.is_a? Hash
-        return obj.inject([]){|memo,v    | memo           << symbolize(v); memo} if obj.is_a? Array
-        return obj
+    def symbolize_keys_deep!(h)
+      h.keys.each do |k|
+        ks    = k.respond_to?(:to_sym) ? k.to_sym : k
+        h[ks] = h.delete k # Preserve order even when k == ks
+        symbolize_keys_deep! h[ks] if h[ks].kind_of? Hash
+      end
     end
     def bootstrap_options_for(action_handler, machine_spec, machine_options)
       machine_options = symbolize(machine_options)
