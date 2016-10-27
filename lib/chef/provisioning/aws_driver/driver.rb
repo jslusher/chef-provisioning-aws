@@ -847,17 +847,10 @@ EOD
         Chef::Provisioning::Machine::UnixMachine.new(machine_spec, transport_for(machine_spec, machine_options, instance), convergence_strategy_for(machine_spec, machine_options))
       end
     end
-    def symbolize_keys_deep!(h)
-      require 'pry'; binding.pry
-      h.keys.each do |k|
-        ks    = k.respond_to?(:to_sym) ? k.to_sym : k
-        h[ks] = h.delete k # Preserve order even when k == ks
-        symbolize_keys_deep! h[ks] if h[ks].kind_of? Hash
-      end
-    end
+
     def bootstrap_options_for(action_handler, machine_spec, machine_options)
-      machine_options = symbolize_keys_deep!(machine_options)
       bootstrap_options = (machine_options[:bootstrap_options] || {}).to_h.dup
+      require 'pry'; binding.pry
       # These are hardcoded for now - only 1 machine at a time
       bootstrap_options[:min_count] = bootstrap_options[:max_count] = 1
       bootstrap_options[:instance_type] ||= default_instance_type
