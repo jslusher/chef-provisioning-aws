@@ -850,7 +850,7 @@ EOD
 
     def bootstrap_options_for(action_handler, machine_spec, machine_options)
       machine_options.keys.each do |key|
-        machine_options[(key.to_sym rescue key) || key] = myhash.delete(key)
+        machine_options[(key.to_sym rescue key) || key] = machine_options.delete(key)
       end
       require 'pry'; binding.pry
       bootstrap_options = (machine_options[:bootstrap_options] || {}).to_h.dup
