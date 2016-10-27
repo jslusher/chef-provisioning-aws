@@ -855,7 +855,7 @@ EOD
       end
     end
     def bootstrap_options_for(action_handler, machine_spec, machine_options)
-      machine_options = symbolize(machine_options)
+      machine_options = symbolize_keys_deep!(machine_options)
       require 'pry'; binding.pry
       bootstrap_options = (machine_options[:bootstrap_options] || {}).to_h.dup
       # These are hardcoded for now - only 1 machine at a time
