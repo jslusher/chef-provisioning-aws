@@ -849,8 +849,10 @@ EOD
     end
 
     def bootstrap_options_for(action_handler, machine_spec, machine_options)
+      machine_options.keys.each do |key|
+        machine_options[(key.to_sym rescue key) || key] = myhash.delete(key)
+      end
       require 'pry'; binding.pry
-      machine_options = machine_options.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
       bootstrap_options = (machine_options[:bootstrap_options] || {}).to_h.dup
       # These are hardcoded for now - only 1 machine at a time
       bootstrap_options[:min_count] = bootstrap_options[:max_count] = 1
