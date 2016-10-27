@@ -847,11 +847,13 @@ EOD
         Chef::Provisioning::Machine::UnixMachine.new(machine_spec, transport_for(machine_spec, machine_options, instance), convergence_strategy_for(machine_spec, machine_options))
       end
     end
-
+    def symbolize(obj)
+        return obj.inject({}){|memo,(k,v)| memo[k.to_sym] =  symbolize(v); memo} if obj.is_a? Hash
+        return obj.inject([]){|memo,v    | memo           << symbolize(v); memo} if obj.is_a? Array
+        return obj
+    end
     def bootstrap_options_for(action_handler, machine_spec, machine_options)
-      machine_options.keys.each do |key|
-        machine_options[(key.to_sym rescue key) || key] = machine_options.delete(key)
-      end
+      machine_options = symbolize(emachine_options)
       require 'pry'; binding.pry
       bootstrap_options = (machine_options[:bootstrap_options] || {}).to_h.dup
       # These are hardcoded for now - only 1 machine at a time
